@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RevitAddIns>
+  <AddIn Type="Command">
+    <Assembly>OpenDataBim.dll</Assembly>
+    <ClientId>ddec9aa9-6581-59d0-9ba2-654a5a2f2af5</ClientId>
+    <FullClassName>OpenDataBim.Main</FullClassName>
+    <Text>Внести изменения</Text>
+    <VisibilityMode>AlwaysVisible</VisibilityMode>
+    <VendorId>FedorAleksandrov</VendorId>
+    <VendorDescription>Autodesk, www.autodesk.com</VendorDescription>
+  </AddIn>
+</RevitAddIns>
