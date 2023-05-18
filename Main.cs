@@ -1,15 +1,14 @@
-﻿using Autodesk.Revit.ApplicationServices;
-using Autodesk.Revit.Attributes;
+﻿using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Forms;
 using Application = Autodesk.Revit.ApplicationServices.Application;
+using Binding = Autodesk.Revit.DB.Binding;
+using MessageBox = System.Windows.Forms.MessageBox;
 
 namespace OpenDataBim
 {
@@ -19,9 +18,19 @@ namespace OpenDataBim
 
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
-            string messageError = "";
-
-            string filePath = @"C:\Users\fedor.aleksandrov\Downloads\Telegram Desktop\boiko\ChangedSourceSample.csv";
+            MessageBox.Show("Выбери csv файл c измененными данными");
+            string filePath = "";
+            OpenFileDialog dialog = new OpenFileDialog();
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                filePath = dialog.FileName;
+            }
+            else
+            {
+                MessageBox.Show("Файл не выбран");
+                return Result.Succeeded;
+            }
+            
 
             UIApplication uiapp = commandData.Application;
             UIDocument uidoc = uiapp.ActiveUIDocument;
@@ -60,7 +69,7 @@ namespace OpenDataBim
                             string nameSymbol = (doc.GetElement(element.GetTypeId()) as FamilySymbol).Name;
                             if (nameSymbol != values[i])
                             {
-                                bool flag = ChangeFamilyType(doc, element, values[i]);
+                                ChangeFamilyType(doc, element, values[i]);
                             }
                         }
                         if (headers[i] == "Level")
@@ -68,7 +77,7 @@ namespace OpenDataBim
                             string nameLevel = doc.GetElement(element.LevelId).Name;
                             if (nameLevel != values[i])
                             {
-                                bool flag = ChangeLevel(doc, element, values[i]);
+                                ChangeLevel(doc, element, values[i]);
                             }
                         }
                         if (headers[i].StartsWith("_"))
@@ -112,7 +121,7 @@ namespace OpenDataBim
                 double elevationAfter = elevationBefore - levelForConnected.Elevation;
                 element.get_Parameter(BuiltInParameter.FAMILY_LEVEL_PARAM).Set(levelForConnected.Id);
                 element.get_Parameter(BuiltInParameter.INSTANCE_FREE_HOST_OFFSET_PARAM).Set(elevationAfter);
-               return true;
+                return true;
             }
             catch (Exception ex)
             {
